@@ -33,7 +33,13 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Cette app utilise la localisation pour géolocaliser les incidents et fournir des informations de sécurité routière</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Cette app utilise la localisation pour la surveillance continue et la détection d'incidents en arrière-plan</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Cette app utilise la caméra pour enregistrer des vidéos de conduite et détecter automatiquement les incidents</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Cette app utilise le microphone pour enregistrer l'audio des vidéos de conduite</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
