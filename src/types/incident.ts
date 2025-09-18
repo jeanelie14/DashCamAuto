@@ -1,3 +1,10 @@
+export interface SensorData {
+  x: number;
+  y: number;
+  z: number;
+  timestamp: number;
+}
+
 export interface IncidentMetadata {
   speed?: number;
   direction?: number;
@@ -6,6 +13,10 @@ export interface IncidentMetadata {
   weather?: string;
   roadType?: string;
   timeOfDay?: 'day' | 'night' | 'dawn' | 'dusk';
+  sensorData?: {
+    accelerometer: SensorData;
+    gyroscope: SensorData;
+  };
 }
 
 export interface IncidentLocation {
@@ -43,6 +54,7 @@ export interface IncidentData {
 export type IncidentType =
   | 'collision'
   | 'hard_brake'
+  | 'sharp_turn'
   | 'acceleration'
   | 'fatigue'
   | 'movement'

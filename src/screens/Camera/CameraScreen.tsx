@@ -1,30 +1,57 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, SafeAreaView, Alert} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store/store';
 import {setRecording, setLastRecordingPath} from '../../store/slices/cameraSlice';
 import {useThemedStyles} from '../../context/ThemeContext';
-import {Card} from '../../components/ui';
+import {Card, Button} from '../../components/ui';
 import CameraView from '../../components/camera/CameraView';
+import useSensors from '../../hooks/useSensors';
 
 const CameraScreen: React.FC = () => {
   const dispatch = useDispatch();
   const cameraState = useSelector((state: RootState) => state.camera);
+  const incidentState = useSelector((state: RootState) => state.incident);
   const styles = useThemedStyles(createStyles);
 
   const [recordingPath, setRecordingPath] = useState<string | null>(null);
+  
+  // Hook pour la gestion des capteurs
+  const {
+    isDetecting,
+    sensorConfig,
+    initializeSensors,
+    startMonitoring,
+    stopMonitoring,
+    getBufferStats,
+  } = useSensors();
 
-  const handleRecordingStart = (path: string) => {
+  // Initialiser les capteurs au montage du composant
+  useEffect(() => {
+    initializeSensors();
+  }, [initializeSensors]);
+
+  const handleRecordingStart = async (path: string) => {
     console.log('Enregistrement démarré:', path);
     setRecordingPath(path);
     dispatch(setRecording(true));
     dispatch(setLastRecordingPath(path));
+    
+    // Démarrer la surveillance des capteurs
+    if (!isDetecting) {
+      await startMonitoring();
+    }
   };
 
-  const handleRecordingStop = (video: unknown) => {
+  const handleRecordingStop = async (video: unknown) => {
     console.log('Enregistrement arrêté:', video);
     setRecordingPath(null);
     dispatch(setRecording(false));
+    
+    // Arrêter la surveillance des capteurs
+    if (isDetecting) {
+      await stopMonitoring();
+    }
 
     Alert.alert('Enregistrement terminé', `Vidéo sauvegardée: ${(video as any).path}`, [
       {text: 'OK', style: 'default'},
@@ -65,6 +92,32 @@ const CameraScreen: React.FC = () => {
             <Text style={styles.pathText}>Fichier: {recordingPath.split('/').pop()}</Text>
           )}
         </Card>
+
+        {/* Statut de détection d'incidents */}
+        <Card style={styles.statusCard}>
+          <Text style={styles.statusTitle}>Détection d'incidents</Text>
+          <Text style={styles.statusText}>
+            {isDetecting ? '🟢 Surveillance active' : '🔴 Surveillance inactive'}
+          </Text>
+          <Text style={styles.statusText}>
+            Incidents détectés: {incidentState.incidents.length}
+          </Text>
+          {incidentState.lastIncident && (
+            <Text style={styles.incidentText}>
+              Dernier: {incidentState.lastIncident.type} ({incidentState.lastIncident.severity})
+            </Text>
+          )}
+        </Card>
+
+        {/* Contrôles de surveillance */}
+        <View style={styles.controlsContainer}>
+          <Button
+            title={isDetecting ? 'Arrêter surveillance' : 'Démarrer surveillance'}
+            onPress={isDetecting ? stopMonitoring : startMonitoring}
+            variant={isDetecting ? 'danger' : 'primary'}
+            style={styles.controlButton}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -118,6 +171,19 @@ const createStyles = (theme: any) =>
       fontSize: theme.typography.fontSize.sm,
       color: theme.colors.textTertiary,
       fontFamily: 'monospace',
+    },
+    incidentText: {
+      fontSize: theme.typography.fontSize.sm,
+      color: theme.colors.warning,
+      fontWeight: theme.typography.fontWeight.medium,
+      marginTop: theme.spacing[1],
+    },
+    controlsContainer: {
+      marginTop: theme.spacing[4],
+      alignItems: 'center',
+    },
+    controlButton: {
+      minWidth: 200,
     },
   });
 

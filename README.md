@@ -502,11 +502,20 @@ DashCamAuto/
 - [ ] Prévisualisation temps réel
 - [ ] Switch automatique caméra avant/arrière
 
-### 📋 Phase 4 : DÉTECTION D'INCIDENTS (Planifiée)
-- [ ] Intégration des capteurs (accéléromètre/gyroscope)
-- [ ] Système de détection d'incidents basique
-- [ ] Buffer circulaire pour l'enregistrement
-- [ ] Tests de détection de mouvement
+### ✅ Phase 4 : DÉTECTION D'INCIDENTS (Terminée)
+- [x] Intégration des capteurs (accéléromètre/gyroscope)
+- [x] Système de détection d'incidents basique
+- [x] Buffer circulaire pour l'enregistrement
+- [x] Tests de détection de mouvement
+
+**Fonctionnalités implémentées :**
+- **SensorService** : Service complet pour la gestion des capteurs (accéléromètre/gyroscope)
+- **Détection d'incidents** : Algorithmes de détection pour collisions, freinages brusques, virages serrés
+- **CircularBufferService** : Système de buffer circulaire pour l'enregistrement continu
+- **Hook useSensors** : Hook React pour l'intégration facile des capteurs
+- **Types d'incidents** : Support pour différents types d'incidents avec métadonnées
+- **Interface utilisateur** : Contrôles de surveillance et affichage du statut
+- **Tests complets** : Suite de tests pour tous les services
 
 ### 📋 Phase 5 : IA ET RECONNAISSANCE (Planifiée)
 - [ ] Intégration TensorFlow
