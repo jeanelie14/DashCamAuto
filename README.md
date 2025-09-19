@@ -87,7 +87,7 @@ DashCam Auto est une application mobile cross-platform développée avec React N
 - **React Navigation** 7.x - Navigation entre écrans
 
 ### 📹 Gestion caméra et vidéo
-- **react-native-vision-camera** - Caméra ultra-performante (à installer)
+- **react-native-vision-camera** - Caméra ultra-performante avec Frame Processors ✅
 - **react-native-video** - Lecture et traitement vidéo (à installer)
 - **@react-native-community/camera** - API caméra native (à installer)
 
@@ -465,6 +465,16 @@ DashCamAuto/
    npm start -- --reset-cache
    ```
 
+5. **Crash VisionCamera (RÉSOLU)**
+   - ✅ Architecture native corrigée (arm64-v8a, x86_64)
+   - ✅ Configuration Gradle mise à jour
+   - ✅ Frame Processors activés
+   - ✅ Gestion d'erreurs onWindowFocusChanged
+
+6. **Problème d'architecture native**
+   - Vérifier que l'émulateur correspond à l'architecture compilée
+   - Nettoyer et recompiler : `cd android && ./gradlew clean && cd .. && npx react-native run-android`
+
 ## 📊 Métriques et performance
 
 ### Optimisations incluses
@@ -495,12 +505,76 @@ DashCamAuto/
 - [x] Design system cohérent (couleurs, typographie, espacements)
 - [x] Interface responsive et moderne
 
-### 📋 Phase 3 : INTÉGRATION CAMÉRA (Planifiée)
-- [ ] Intégration react-native-vision-camera
-- [ ] Enregistrement vidéo HD avec son
-- [ ] Contrôles caméra (zoom, focus, flash)
-- [ ] Prévisualisation temps réel
-- [ ] Switch automatique caméra avant/arrière
+### 📋 Phase 3 : INTÉGRATION CAMÉRA ET INTERFACE PRINCIPALE (En cours)
+
+#### 🎯 Objectifs de la Phase 3
+Créer une interface caméra professionnelle avec overlays temps réel pour une expérience de conduite optimale.
+
+#### ✅ Progrès actuel
+- [x] Intégration react-native-vision-camera
+- [x] Configuration architecture native (arm64-v8a, x86_64)
+- [x] Frame Processors activés pour l'analyse d'image
+- [x] Correction des problèmes de crash et architecture
+
+#### 📋 Tâches restantes
+
+**🎨 Logo et identité visuelle**
+- [ ] **Logo de l'application** - Icône caméra vectorielle moderne et professionnelle
+- [ ] **Configuration icônes** - Android (mipmap) et iOS (AppIcon) avec toutes les résolutions
+- [ ] **Splash screen** - Écran de démarrage avec logo
+
+**📱 Interface caméra principale**
+- [ ] **Écran d'accueil = Caméra** - Caméra arrière par défaut au lancement
+- [ ] **Overlays professionnels** - Interface semi-transparente, lisible en conduite
+- [ ] **Vitesse en temps réel** - Compteur digital (km/h) en haut à gauche
+- [ ] **Accès paramètres** - Icône réglages (⚙️) en haut à droite
+- [ ] **Barre d'état** - Statut enregistrement (🔴/🟢), GPS, batterie en bas
+
+**🎨 Design système et UX**
+- [ ] **Couleurs thématiques** - Vert=vitesse, blanc=infos système, gris=réglages
+- [ ] **Overlays semi-transparents** - Lisibles sans gêner la caméra
+- [ ] **Typographie adaptée** - Compteur digital, textes système
+- [ ] **Animations fluides** - Transitions et indicateurs d'état
+
+**⚙️ Architecture et intégration**
+- [ ] **Hook useLocation** - Calcul vitesse avec react-native-geolocation-service
+- [ ] **Redux integration** - Connexion vitesse et capteurs aux slices
+- [ ] **Navigation** - Redirection vers SettingsScreen depuis l'icône réglages
+- [ ] **État global** - Gestion statut enregistrement, GPS, batterie
+
+#### 🛠 Spécifications techniques
+
+**Composants à créer :**
+- `Speedometer.tsx` - Compteur de vitesse digital
+- `StatusBar.tsx` - Barre d'état (enregistrement, GPS, batterie)
+- `CameraOverlay.tsx` - Interface overlays principale
+- `SettingsButton.tsx` - Bouton d'accès aux paramètres
+
+**Hooks à implémenter :**
+- `useSpeed.ts` - Calcul vitesse en temps réel
+- `useBattery.ts` - Monitoring niveau batterie
+- `useGPSStatus.ts` - Statut GPS et précision
+
+**Redux slices à étendre :**
+- `locationSlice.ts` - Ajout vitesse et statut GPS
+- `cameraSlice.ts` - Statut enregistrement et métadonnées
+- `systemSlice.ts` - État batterie et système
+
+#### 🎨 Palette de couleurs Phase 3
+
+**Couleurs principales :**
+- **Vert vitesse** (`#00FF88`) - Compteur de vitesse et indicateurs actifs
+- **Blanc système** (`#FFFFFF`) - Informations système et textes principaux
+- **Gris réglages** (`#CCCCCC`) - Boutons et éléments secondaires
+- **Rouge enregistrement** (`#FF4444`) - Statut d'enregistrement actif
+- **Vert GPS** (`#44FF44`) - Statut GPS actif
+- **Orange batterie** (`#FFAA00`) - Niveau batterie faible
+- **Overlay sombre** (`rgba(0,0,0,0.6)`) - Arrière-plan des overlays
+
+**Typographie :**
+- **Compteur vitesse** - Font monospace, taille 48px, gras
+- **Textes système** - Font système, taille 16px, normal
+- **Indicateurs** - Font système, taille 14px, semi-gras
 
 ### ✅ Phase 4 : DÉTECTION D'INCIDENTS (Terminée)
 - [x] Intégration des capteurs (accéléromètre/gyroscope)

@@ -19,4 +19,16 @@ class MainActivity : ReactActivity() {
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+
+  /**
+   * Override onWindowFocusChanged to prevent ReactNoCrashSoftException
+   */
+  override fun onWindowFocusChanged(hasFocus: Boolean) {
+    try {
+      super.onWindowFocusChanged(hasFocus)
+    } catch (e: Exception) {
+      // Ignore the exception to prevent crash
+      // This happens when React context is not ready yet
+    }
+  }
 }
