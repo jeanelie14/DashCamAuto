@@ -1,5 +1,5 @@
 import {Platform, Alert, Linking} from 'react-native';
-import {request, PERMISSIONS, RESULTS, Permission} from 'react-native-permissions';
+import {request, check, PERMISSIONS, RESULTS, Permission} from 'react-native-permissions';
 
 export interface PermissionStatus {
   camera: boolean;
@@ -114,14 +114,101 @@ class PermissionService {
    * Vérifie si toutes les permissions sont accordées
    */
   async checkAllPermissions(): Promise<PermissionStatus> {
-    // Cette méthode vérifierait l'état actuel des permissions
-    // Pour l'instant, on retourne false pour forcer la demande
-    return {
-      camera: false,
-      microphone: false,
-      location: false,
-      storage: false,
-    };
+    try {
+      const permissions = await Promise.all([
+        this.checkCameraPermission(),
+        this.checkMicrophonePermission(),
+        this.checkLocationPermission(),
+        this.checkStoragePermission(),
+      ]);
+
+      return {
+        camera: permissions[0],
+        microphone: permissions[1],
+        location: permissions[2],
+        storage: permissions[3],
+      };
+    } catch (error) {
+      console.error('Erreur lors de la vérification des permissions:', error);
+      return {
+        camera: false,
+        microphone: false,
+        location: false,
+        storage: false,
+      };
+    }
+  }
+
+  /**
+   * Vérifie la permission caméra
+   */
+  private async checkCameraPermission(): Promise<boolean> {
+    try {
+      const permission: Permission = Platform.select({
+        android: PERMISSIONS.ANDROID.CAMERA,
+        ios: PERMISSIONS.IOS.CAMERA,
+      }) as Permission;
+
+      const result = await check(permission);
+      return result === RESULTS.GRANTED;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de la permission caméra:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Vérifie la permission microphone
+   */
+  private async checkMicrophonePermission(): Promise<boolean> {
+    try {
+      const permission: Permission = Platform.select({
+        android: PERMISSIONS.ANDROID.RECORD_AUDIO,
+        ios: PERMISSIONS.IOS.MICROPHONE,
+      }) as Permission;
+
+      const result = await check(permission);
+      return result === RESULTS.GRANTED;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de la permission microphone:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Vérifie la permission de localisation
+   */
+  private async checkLocationPermission(): Promise<boolean> {
+    try {
+      const permission: Permission = Platform.select({
+        android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      }) as Permission;
+
+      const result = await check(permission);
+      return result === RESULTS.GRANTED;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de la permission localisation:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Vérifie la permission de stockage
+   */
+  private async checkStoragePermission(): Promise<boolean> {
+    try {
+      if (Platform.OS === 'ios') {
+        return true;
+      }
+
+      const permission: Permission = PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE;
+      const result = await check(permission);
+      return result === RESULTS.GRANTED;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de la permission stockage:', error);
+      return false;
+    }
   }
 
   /**

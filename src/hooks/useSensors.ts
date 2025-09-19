@@ -189,10 +189,10 @@ export const useSensors = () => {
   /**
    * Met à jour la configuration des capteurs
    */
-  const updateSensorConfig = useCallback((newConfig: Partial<typeof sensorConfig>) => {
+  const updateSensorConfigCallback = useCallback((newConfig: Partial<IncidentDetectionConfig>) => {
     dispatch(updateSensorConfig(newConfig));
     SensorService.updateConfig(newConfig);
-  }, [dispatch, sensorConfig]);
+  }, [dispatch]);
 
   // Effet pour mettre à jour les données des capteurs périodiquement
   useEffect(() => {
@@ -224,7 +224,7 @@ export const useSensors = () => {
     initializeSensors,
     startMonitoring,
     stopMonitoring,
-    updateSensorConfig,
+    updateSensorConfig: updateSensorConfigCallback,
     
     // Données
     getBufferStats,
