@@ -16,6 +16,9 @@ export type {SwitchProps} from './Switch';
 export {List, ListItem} from './List';
 export type {ListProps, ListItemProps} from './List';
 
+export {AppLogo} from './AppLogo';
+export type {AppLogoProps} from './AppLogo';
+
 // Icon components
 export {
   HomeIcon,

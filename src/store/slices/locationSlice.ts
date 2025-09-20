@@ -18,6 +18,8 @@ export interface LocationState {
   accuracy: 'low' | 'medium' | 'high';
   updateInterval: number;
   error: string | null;
+  speed: number; // en km/h
+  isGpsActive: boolean;
 }
 
 const initialState: LocationState = {
@@ -27,6 +29,8 @@ const initialState: LocationState = {
   accuracy: 'high',
   updateInterval: 1000, // 1 second
   error: null,
+  speed: 0,
+  isGpsActive: false,
 };
 
 const locationSlice = createSlice({
@@ -51,6 +55,18 @@ const locationSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    updateLocation: (state, action: PayloadAction<{latitude: number; longitude: number; accuracy: number; timestamp: number}>) => {
+      state.currentLocation = {
+        ...state.currentLocation,
+        ...action.payload,
+      } as LocationData;
+    },
+    updateSpeed: (state, action: PayloadAction<number>) => {
+      state.speed = action.payload;
+    },
+    setGpsActive: (state, action: PayloadAction<boolean>) => {
+      state.isGpsActive = action.payload;
+    },
     resetLocation: () => initialState,
   },
 });
@@ -62,6 +78,9 @@ export const {
   setAccuracy,
   setUpdateInterval,
   setError,
+  updateLocation,
+  updateSpeed,
+  setGpsActive,
   resetLocation,
 } = locationSlice.actions;
 

@@ -9,6 +9,7 @@ import {HomeIcon, CameraIcon, HistoryIcon, SettingsIcon} from '../components/ui'
 // Import screens (we'll create these next)
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import CameraScreen from '../screens/Camera/CameraScreen';
+import HomeCameraScreen from '../screens/Camera/HomeCameraScreen';
 import HistoryScreen from '../screens/History/HistoryScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import PlaybackScreen from '../screens/Playback/PlaybackScreen';
@@ -24,12 +25,19 @@ const TabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border,
+          display: 'none', // Masquer la barre de navigation
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textTertiary,
       }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeCameraScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => <CameraIcon size={size} color={color} />,
+        }}
+      />
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}

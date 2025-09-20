@@ -1,0 +1,8 @@
+android/build.gradle
+android/gradle/wrapper/gradle-wrapper.properties
+package-lock.json
+package.json
+src/components/ui/index.ts
+src/navigation/AppNavigator.tsx
+src/store/slices/locationSlice.ts
+src/types/navigation.ts
