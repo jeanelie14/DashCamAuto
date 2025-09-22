@@ -1,4 +1,4 @@
-import {Camera} from 'react-native-vision-camera';
+import {Camera, CameraPermissionStatus} from 'react-native-vision-camera';
 import RNFS from 'react-native-fs';
 import LocationService, {LocationData} from './LocationService';
 import StorageService from './StorageService';
@@ -50,10 +50,10 @@ class CameraService {
       Logger.info('CAMERA', 'Initialisation du service caméra');
       
       // Vérifier les permissions
-      const hasPermission = await Camera.getCameraPermissionStatus();
+      const hasPermission: CameraPermissionStatus = await Camera.getCameraPermissionStatus();
       if (hasPermission !== 'authorized') {
         Logger.warn('CAMERA', 'Permission caméra non accordée, demande en cours');
-        const permission = await Camera.requestCameraPermission();
+        const permission: CameraPermissionStatus = await Camera.requestCameraPermission();
         const isAuthorized = permission === 'authorized';
         
         if (isAuthorized) {

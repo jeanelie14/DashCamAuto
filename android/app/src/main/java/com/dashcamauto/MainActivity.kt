@@ -1,5 +1,12 @@
 package com.dashcamauto
 
+import android.content.Context
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import android.os.Bundle
+import androidx.annotation.Nullable
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -19,6 +26,28 @@ class MainActivity : ReactActivity() {
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+
+  /**
+   * Override onCreate to configure VisionCamera
+   */
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    
+    // Configuration pour VisionCamera
+    // Les Frame Processors seront configurés via le JavaScript
+  }
+
+  /**
+   * Android 14 compatibility fix for BroadcastReceivers
+   * This is required to prevent crashes on Android 14 (API 34)
+   */
+  override fun registerReceiver(@Nullable receiver: BroadcastReceiver?, filter: IntentFilter?): Intent? {
+    return if (Build.VERSION.SDK_INT >= 34 && applicationInfo.targetSdkVersion >= 34) {
+      super.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
+    } else {
+      super.registerReceiver(receiver, filter)
+    }
+  }
 
   /**
    * Override onWindowFocusChanged to prevent ReactNoCrashSoftException
